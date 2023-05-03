@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Color Scroll</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Courier New";
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  </head>
+  <body>
+    <script>
+      let hueValue, scrollCount;
+      let textPhases;
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noCursor();
+        colorMode(HSB, 360, 100, 100, 1);
+        textAlign(CENTER, CENTER);
+        textSize(24);
+        hueValue = random(360);
+        scrollCount = 0;
+        textPhases = [
+          { threshold: 150, text: "did you know" },
+          { threshold: 300, text: "that the average person" },
+          { threshold: 450, text: "scrolls 914m a day" },
+          { threshold: 600, text: "that's 6.4km a week" },
+          { threshold: 750, text: "330km a year" },
+          { threshold: 900, text: "over 53,000km since the iphone was released in 2007"},
+          { threshold: 1050, text: "couldn't you be doing something better"},
+          { threshold: 1300, text: "with all that time?"},
+        ];
+      }
+
+      function draw() {
+        let currentColor = color(hueValue, 60, 90);
+        background(currentColor);
+
+        for (let i = 0; i < textPhases.length; i++) {
+          if (scrollCount >= textPhases[i].threshold) {
+            let fade = min(0.2, (scrollCount - textPhases[i].threshold) / 50);
+            let textColor = color(0, 0, 100, fade);
+            fill(textColor);
+            text(textPhases[i].text, width / 2, height / 2 + i * 30);
+          }
+        }
+      }
+
+      function mouseWheel(event) {
+        let delta = event.delta;
+        hueValue += delta > 0 ? 0.5 : -0.5;
+        hueValue = (hueValue + 360) % 360;
+        scrollCount += delta > 0 ? 1 : -1;
+        scrollCount = max(scrollCount, 0);
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+    </script>
+  </body>
+</html>
